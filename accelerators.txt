@@ -1,0 +1,27 @@
+This library can use accelerators (such as gpu or fpga)
+
+For now, it has opencl support, thus it runs on all devices supporting opencl,
+however the performance can vary substantialy
+
+
+Requirements to use opencl:
+
+Debian and derivatives
+something like this or find other manuals on web
+https://streamhpc.com/blog/2011-06-24/install-opencl-on-debianubuntu-orderly/
+
+Fedora and derivatives
+https://fedoraproject.org/wiki/Changes/OpenCL
+
+Arch linux and derivatives (such as Manjaro)
+https://wiki.archlinux.org/title/GPGPU
+// necessary for all devices
+pacman -S ocl-icd opencl-headers opencl-clhpp
+// AMD GPU
+pacman -S opencl-mesa
+// NVIDIA GPU
+pacman -S opencl-nvidia
+// Intel HD GPU on Broadwell and beyond
+pacman -S intel-compute-runtime
+// LLVM based (runs on all cpus)
+pacman -S pocl

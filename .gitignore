@@ -1,0 +1,25 @@
+# build outputs
+*.o
+*.so
+*.a
+*.out
+*.exe
+
+# test binaries
+tests/test_buffer
+tests/test_tensor
+tests/test_activations
+tests/test_losses
+tests/test_layers
+tests/test_models
+
+# example binaries
+examples/example1
+examples/example2
+examples/network_example1
+examples/network_example2
+
+# editor and OS files
+.vscode/
+.idea/
+.DS_Store

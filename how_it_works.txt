@@ -1,0 +1,34 @@
+Main class of the library is Tensor
+
+Tensor works in similar way as shared pointer, it holds only single pointer to TensorData,
+struct TensorData holds all the data
+
+You must pass Tensor only by value, because it counts all the references
+to struct TensorData, and so it can manage its own memory
+If you pass Tensor by reference or via a pointer, it is possible for the data to be freed,
+thus you will encounter something like nullptr exception in java
+
+Tensor is an object that holds values in multidimensional arrays. It can have only one
+dimension, two dimensions (matrix) or three dimensions
+
+On this tensor, you can execute many mathematical operations
+
+If tensor requires gradient, set with Tensor::requires_grad(bool),
+it will automatically keep track of operations that were executed with it
+and after calling Tensor::backward() function, it will populate its grad attributes
+with values
+
+Grad values of given tensor are derivatives of the tensor on which Tensor::backward()
+function was called with respect to the given tensor:
+
+  // not actual program, just pseudocode example
+  x = Tensor(2, 3)
+  z = 2 * x
+  z.backward()
+  print(x.grad)
+  // output
+  [2, 2]
+  // thus x.grad = dz/dx
+
+This works for any number of operations chained together
+Values necessary for calculation of gradients are stored in grad attribute of class Tensor

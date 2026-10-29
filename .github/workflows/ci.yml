@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  cpu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: make -C tests -j"$(nproc)"
+      - name: Test
+        run: |
+          for test in test_buffer test_tensor test_activations test_losses test_layers test_models; do
+            ./tests/$test
+          done
+      - name: Build examples
+        run: make -C examples -j"$(nproc)"
+
+  opencl:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install OpenCL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ocl-icd-opencl-dev opencl-clhpp-headers pocl-opencl-icd
+      - name: Build
+        run: make -C tests -j"$(nproc)" OPENCL=1
+      - name: Test
+        run: |
+          for test in test_buffer test_tensor test_activations test_losses test_layers test_models; do
+            ./tests/$test
+          done
+      - name: Build examples
+        run: make -C examples -j"$(nproc)" OPENCL=1
