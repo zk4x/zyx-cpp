@@ -76,6 +76,8 @@ make OPENCL=1 \
   OPENCL_LIBS="-L/path/to/lib -lOpenCL"
 ```
 
+Note that the CUDA toolkit ships OpenCL's C header but not the Khronos C++ header `CL/opencl.hpp`. That header has to come from `opencl-clhpp-headers` or another Khronos CLHPP package.
+
 Examples use the same flags:
 
 ```sh
