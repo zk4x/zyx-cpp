@@ -33,11 +33,13 @@ The library supports 1D and 2D tensors. `matmul` is 2D, and broadcasting is the 
 - `make`.
 - OpenCL is optional. To build with it you need the OpenCL loader and the Khronos C++ header `CL/opencl.hpp`.
 
-On Debian/Ubuntu, the OpenCL C++ header is in `opencl-clhpp-headers`:
+On Debian/Ubuntu, the OpenCL C++ header is in `opencl-clhpp-headers` and the linker symlink is in `ocl-icd-opencl-dev`:
 
 ```sh
 sudo apt install opencl-clhpp-headers ocl-icd-opencl-dev
 ```
+
+If only the runtime loader is installed, linking with `-lOpenCL` will fail. In that case install `ocl-icd-opencl-dev`, or point `OPENCL_LIBS` at a directory that contains `libOpenCL.so` (for example the CUDA toolkit's `lib` directory).
 
 ## Build and test
 
