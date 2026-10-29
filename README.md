@@ -1,95 +1,31 @@
 # zyx-cpp
 
-The original C++ implementation of [zyx](https://github.com/zk4x/zyx), written about five years ago and preserved here as a portfolio artifact.
+A header-only tensor and automatic differentiation library written in C++.
 
-It is a small, header-only tensor and automatic-differentiation library. The Rust version is the successor and is the one that is actively developed; this repository is not.
+Tensors can hold one-, two-, or three-dimensional values. Operations currently support 1D and 2D data, including matrix multiplication and the usual element-wise arithmetic.
 
-## Status
+## Features
 
-This is the code as it was originally written, with only the build fixes and bug fixes required to make it compile and pass its tests again. There is no new feature work and no modernization.
-
-The following unfinished or non-functional pieces were removed rather than published as if they worked:
-
-- the empty `conv2d` implementation,
-- the no-op `Pooling` layer,
-- the unfinished `L1` and `CrossEntropy` losses.
-
-## What is here
-
-- `Tensor`, a shared-pointer-backed N-dimensional value with reverse-mode autograd (`backward()`).
-- A `Buffer` abstraction with a CPU backend by default and an OpenCL backend behind `ZYX_USE_OPENCL`.
-- The original experimental ArrayFire/clBLAS backend files, kept as part of the artifact.
-- `nn::layer::Linear` and `nn::layer::Dropout`.
-- `nn::ReLU` and `nn::Tanh`.
-- `nn::loss::MSE`.
-- `optim::SGD` and `optim::Adam`.
-- Tests and small examples.
-
-The library supports 1D and 2D tensors. `matmul` is 2D, and broadcasting is the flat "repeat the smaller buffer" form used by the original code (scalars and bias vectors).
+- `Tensor` with reverse-mode automatic differentiation and `backward()`
+- CPU storage by default; optional OpenCL backend
+- `nn::layer::Linear` and `nn::layer::Dropout`
+- `nn::ReLU` and `nn::Tanh`
+- `nn::loss::MSE`
+- `optim::SGD` and `optim::Adam`
 
 ## Requirements
 
-- A C++23 compiler (the Makefiles use `-std=c++23`).
-- `make`.
-- OpenCL is optional. To build with it you need the OpenCL loader and the Khronos C++ header `CL/opencl.hpp`.
+- A C++23 compiler
+- `make`
+- OpenCL is optional
 
-On Debian/Ubuntu, the OpenCL C++ header is in `opencl-clhpp-headers` and the linker symlink is in `ocl-icd-opencl-dev`:
+## Usage
 
-```sh
-sudo apt install opencl-clhpp-headers ocl-icd-opencl-dev
-```
-
-If only the runtime loader is installed, linking with `-lOpenCL` will fail. In that case install `ocl-icd-opencl-dev`, or point `OPENCL_LIBS` at a directory that contains `libOpenCL.so` (for example the CUDA toolkit's `lib` directory).
-
-## Build and test
-
-CPU:
+Add the `src` directory to the include path and include the headers you need:
 
 ```sh
-cd tests
-make -j
-./test_buffer
-./test_tensor
-./test_activations
-./test_losses
-./test_layers
-./test_models
+g++ -std=c++23 -Isrc main.cpp
 ```
-
-Or from the repository root:
-
-```sh
-./run_tests.sh
-```
-
-OpenCL:
-
-```sh
-cd tests
-make clean
-make -j OPENCL=1
-```
-
-If OpenCL lives in a non-standard prefix (for example the CUDA toolkit), pass the paths explicitly:
-
-```sh
-make OPENCL=1 \
-  OPENCL_INCLUDE="-I/path/to/include" \
-  OPENCL_LIBS="-L/path/to/lib -lOpenCL"
-```
-
-Note that the CUDA toolkit ships OpenCL's C header but not the Khronos C++ header `CL/opencl.hpp`. That header has to come from `opencl-clhpp-headers` or another Khronos CLHPP package.
-
-Examples use the same flags:
-
-```sh
-cd examples
-make -j
-./example1
-./network_example1
-```
-
-## A small example
 
 ```cpp
 #include "nn.hpp"
@@ -110,12 +46,68 @@ int main() {
 }
 ```
 
-## Notes
+## Tests
 
-- `how_it_works.txt` is the original short explanation of the autograd design.
-- `accelerators.txt` and `readme.txt` are the original project notes, left as they were.
-- OpenCL support was experimental. It is tested on the CUDA OpenCL implementation.
-- This is an educational library, not a production numerical framework.
+```sh
+cd tests
+make -j
+./test_buffer
+./test_tensor
+./test_activations
+./test_losses
+./test_layers
+./test_models
+```
+
+Or run the whole suite from the repository root:
+
+```sh
+./run_tests.sh
+```
+
+## Examples
+
+```sh
+cd examples
+make -j
+./example1
+./example2
+./network_example1
+./network_example2
+```
+
+## OpenCL
+
+Build and test with the OpenCL backend:
+
+```sh
+cd tests
+make clean
+make -j OPENCL=1
+```
+
+This enables `ZYX_USE_OPENCL`. You need the OpenCL loader and the Khronos C++ header `CL/opencl.hpp`.
+
+On Debian/Ubuntu:
+
+```sh
+sudo apt install opencl-clhpp-headers ocl-icd-opencl-dev
+```
+
+For a non-standard OpenCL installation, pass the paths explicitly:
+
+```sh
+make OPENCL=1 \
+  OPENCL_INCLUDE="-I/path/to/include" \
+  OPENCL_LIBS="-L/path/to/lib -lOpenCL"
+```
+
+The CUDA toolkit ships OpenCL's C header but not the Khronos C++ header `CL/opencl.hpp`. That header comes from `opencl-clhpp-headers` or another CLHPP package.
+
+## Documentation
+
+- `how_it_works.txt` describes the autograd design.
+- `accelerators.txt` describes the OpenCL requirements.
 
 ## License
 
